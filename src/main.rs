@@ -21,41 +21,18 @@ fn write_file(file_name: &str, data : Vec::<u8>) -> std::io::Result<()> {
     return Ok(());
 }
 
-fn recive_package(mut stream: TcpStream) -> std::io::Result<Vec<u8>> {
-    let mut package_len = [0 as u8; 8];
-    stream.read_exact(&mut package_len)?;
-    let len = u64::from_be_bytes(package_len);
-  
-    let mut data = vec![0; len.try_into().unwrap()];
-    stream.read_exact(&mut data)?;
-    return Ok(data);
-}
-
-fn send_packet(mut stream: TcpStream, data: Vec<u8>)-> std::io::Result<()>  {
-  let length: u64 = data.len().try_into().unwrap();
-  let len_bytes = length.to_be_bytes();
-  stream.write(&len_bytes).unwrap();
-  stream.write(&data)?;
-  Ok(())
-}
-
-
 fn recive_file(file_name: &str) -> std::io::Result<()> {
-  let listener = TcpListener::bind("0.0.0.0:6666").unwrap();
-  let (stream, _addr) = listener.accept()?;
-  let data = recive_package(stream)?;
-  write_file(file_name, data)?;
+	let tcp = easytcp::tcp::simple_listen("0.0.0.0", "6666").unwrap();
+  write_file(file_name, tcp.recive()?)?;
   return Ok(());
 }
 
 fn send_file(ip: &str, file_name: &str) -> std::io::Result<()> {
-  let addr = format!("{}{}", ip, ":6666");
-  let stream = TcpStream::connect(addr)?;
-  let data = read_file(file_name)?;
-  send_packet(stream, data)?;
-  return Ok(());
+	let tcp = easytcp::tcp::simple_connect(ip, "6666").unwrap();
+	let data = read_file(file_name)?;
+	tcp.send(data).unwrap();
+	return Ok(())
 }
-
 
 fn print_usage(prog_name: &str) -> () {
   println!("usage:");
