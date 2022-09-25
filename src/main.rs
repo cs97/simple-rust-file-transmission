@@ -22,15 +22,15 @@ fn write_file(file_name: &str, data : Vec::<u8>) -> std::io::Result<()> {
 }
 
 fn recive_file(file_name: &str) -> std::io::Result<()> {
-	let tcp = easytcp::tcp::simple_listen("0.0.0.0", "6666").unwrap();
+	let tcp = easytcp::tcp::simple_listen("0.0.0.0", "6666")?;
   write_file(file_name, tcp.recive()?)?;
   return Ok(());
 }
 
 fn send_file(ip: &str, file_name: &str) -> std::io::Result<()> {
-	let tcp = easytcp::tcp::simple_connect(ip, "6666").unwrap();
+	let tcp = easytcp::tcp::simple_connect(ip, "6666")?;
 	let data = read_file(file_name)?;
-	tcp.send(data).unwrap();
+	tcp.send(data)?;
 	return Ok(())
 }
 
