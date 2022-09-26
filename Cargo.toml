@@ -10,3 +10,4 @@ lto = true
 strip = true
 
 [dependencies]
+easytcp = { git = "https://github.com/cs97/rust-easytcp" }
