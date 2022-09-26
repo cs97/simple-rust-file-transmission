@@ -93,8 +93,8 @@ fn doit() -> std::io::Result<()> {
   if args.len() > 1 {
     let arg = &args[1].as_str();
     match arg {
-      &"-r" => recive_file(&args[2]),
-      &"-s" => send_file(&args[2], &args[3]),
+      &"-r" => recive_file_in_chunks(&args[2]),
+      &"-s" => send_file_in_chunks(&args[2], &args[3]),
       _ => Ok(print_usage(&args[0])),
     }?;
   } else {
