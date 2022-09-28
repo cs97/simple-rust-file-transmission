@@ -89,15 +89,14 @@ fn progressbar(value: usize, target_value: usize) -> () {
 	if percent >= 100 {
     percent = 100;
   };
-
-  let n = (4 * percent) / 10 ;
+	let n = (4 * percent) / 10 ;
 
 	let var1 = "=".repeat(n).to_string();
-  let var2 = "-".repeat(40-n).to_string();
+	let var2 = "-".repeat(40-n).to_string();
 	let s = format!("[{}{}] {}%", var1, var2, percent);
 
-  let stdout = io::stdout();
-  let mut handle = stdout.lock();
+	let stdout = io::stdout();
+	let mut handle = stdout.lock();
 
 	io::stdout().write_all("\r".as_bytes()).unwrap();
 	handle.write_all(s.as_bytes()).unwrap();
@@ -105,29 +104,29 @@ fn progressbar(value: usize, target_value: usize) -> () {
 }
 
 fn print_usage(prog_name: &str) -> () {
-  println!("usage:");
-  println!("\t{} {}", prog_name, "-r <filename>");
-  println!("\t{} {}", prog_name, "-s <IP> <filename>");
+	println!("usage:");
+	println!("\t{} {}", prog_name, "-r <filename>");
+	println!("\t{} {}", prog_name, "-s <IP> <filename>");
 }
 
 
 
 fn doit() -> std::io::Result<()> {
-  let args: Vec<String> = env::args().collect();
-  if args.len() > 1 {
-    let arg = &args[1].as_str();
-    match arg {
-      &"-r" => recive_file_in_chunks(&args[2]),
-      &"-s" => send_file_in_chunks(&args[2], &args[3]),
-      _ => Ok(print_usage(&args[0])),
-    }?;
-  } else {
-    print_usage(&args[0]);
-  }
-  return Ok(());
+	let args: Vec<String> = env::args().collect();
+	if args.len() > 1 {
+		let arg = &args[1].as_str();
+    	match arg {
+      		&"-r" => recive_file_in_chunks(&args[2]),
+      		&"-s" => send_file_in_chunks(&args[2], &args[3]),
+    		_ => Ok(print_usage(&args[0])),
+    	}?;
+	} else {
+    	print_usage(&args[0]);
+	}
+	return Ok(());
 }
 
 fn main() -> std::io::Result<()> {
-  doit()?;
-  return Ok(());
+	doit()?;
+	return Ok(());
 }
