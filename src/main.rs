@@ -1,4 +1,5 @@
 // simple-rust-file-transmission
+use std::io::{self, Write};
 use std::io::BufReader;
 use std::io::prelude::*;
 //use std::net::{TcpListener, TcpStream};
@@ -66,8 +67,10 @@ fn send_file_in_chunks(ip: &str, file_name: &str) -> std::io::Result<()> {
 
 	let tcp = easytcp::tcp::simple_connect(ip, "6666")?;
 	tcp.send(file_length.to_be_bytes().to_vec())?;
+	let mut progress: usize = 0;
 
 	loop {
+		progressbar(progress, file_length.try_into().unwrap());
 		let buffer = br.fill_buf()?;
 		let bufferlen = buffer.len();
 		if bufferlen == 0 {
@@ -75,10 +78,31 @@ fn send_file_in_chunks(ip: &str, file_name: &str) -> std::io::Result<()> {
 		}
 		tcp.send(buffer.to_vec()).unwrap();
 		br.consume(bufferlen);
+		progress = progress + 4096;
 	}
+	println!("");
 	return Ok(());
 }
 
+fn progressbar(value: usize, target_value: usize) -> () {
+	let mut percent = (value * 100) / target_value;
+	if percent >= 100 {
+    percent = 100;
+  };
+
+  let n = (4 * percent) / 10 ;
+
+	let var1 = "=".repeat(n).to_string();
+  let var2 = "-".repeat(40-n).to_string();
+	let s = format!("[{}{}] {}%", var1, var2, percent);
+
+  let stdout = io::stdout();
+  let mut handle = stdout.lock();
+
+	io::stdout().write_all("\r".as_bytes()).unwrap();
+	handle.write_all(s.as_bytes()).unwrap();
+	handle.flush().unwrap();
+}
 
 fn print_usage(prog_name: &str) -> () {
   println!("usage:");
