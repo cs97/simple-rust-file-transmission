@@ -37,7 +37,7 @@ fn send_file(ip: &str, file_name: &str) -> std::io::Result<()> {
 */
 
 fn recive_file_in_chunks(file_name: &str) -> std::io::Result<()> {
-	let tcp = easytcp::tcp::simple_listen("0.0.0.0", "6666")?;
+	let tcp = easytcp::tcp::listen("0.0.0.0", "6666")?;
 
 	let package_len = tcp.recive()?;
 	let package_len_bytes: [u8; 8] = package_len[0..8].try_into().unwrap();
@@ -65,7 +65,7 @@ fn send_file_in_chunks(ip: &str, file_name: &str) -> std::io::Result<()> {
 	let file_length: u64 = file.metadata().unwrap().len();
 	let mut br = BufReader::with_capacity(4096, file);
 
-	let tcp = easytcp::tcp::simple_connect(ip, "6666")?;
+	let tcp = easytcp::tcp::connect(ip, "6666")?;
 	tcp.send(file_length.to_be_bytes().to_vec())?;
 	let mut progress: usize = 0;
 
