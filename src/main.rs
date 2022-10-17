@@ -5,9 +5,29 @@ use std::io::prelude::*;
 use std::fs::File;
 use std::env;
 
-fn recive_file_in_chunks(file_name: &str) -> std::io::Result<()> {
-	let tcp = easytcp::tcp::listen("0.0.0.0", "6666")?;
 
+fn get_tcp_listen() -> std::io::Result<easytcp::tcp_aes_cbc::SecureTcp> {
+	//let tcp = easytcp::tcp::listen("0.0.0.0", "6666")?;
+
+	let key = "nice key";
+	let tcp = easytcp::tcp_aes_cbc::listen("0.0.0.0", "6666", key)?;
+
+	return Ok(tcp)
+}
+
+fn get_tcp_connect(ip: &str) -> std::io::Result<easytcp::tcp_aes_cbc::SecureTcp> {
+	//let tcp = easytcp::tcp::connect(ip, "6666")?;
+
+	let key = "nice key";
+	let tcp = easytcp::tcp_aes_cbc::connect(ip, "6666", key)?;
+
+	return Ok(tcp)
+}
+
+
+fn recive_file_in_chunks(file_name: &str) -> std::io::Result<()> {
+	
+	let tcp = get_tcp_listen()?;
 	let package_len = tcp.recive()?;
 	let package_len_bytes: [u8; 8] = package_len[0..8].try_into().unwrap();
 	let n = u64::from_be_bytes(package_len_bytes);
@@ -29,12 +49,15 @@ fn recive_file_in_chunks(file_name: &str) -> std::io::Result<()> {
 	return Ok(());
 }
 
+
 fn send_file_in_chunks(ip: &str, file_name: &str) -> std::io::Result<()> {
 	let file = File::open(file_name)?;
 	let file_length: u64 = file.metadata().unwrap().len();
 	let mut br = BufReader::with_capacity(4096, file);
 
-	let tcp = easytcp::tcp::connect(ip, "6666")?;
+	//let tcp = easytcp::tcp::connect(ip, "6666")?;
+	let tcp = get_tcp_connect(ip)?;
+
 	tcp.send(file_length.to_be_bytes().to_vec())?;
 	let mut progress: usize = 0;
 
@@ -52,6 +75,7 @@ fn send_file_in_chunks(ip: &str, file_name: &str) -> std::io::Result<()> {
 	println!("");
 	return Ok(());
 }
+
 
 fn progressbar(value: usize, target_value: usize) -> () {
 	let mut percent = (value * 100) / target_value;
@@ -77,7 +101,6 @@ fn print_usage(prog_name: &str) -> () {
 	println!("\t{} {}", prog_name, "-r <filename>");
 	println!("\t{} {}", prog_name, "-s <IP> <filename>");
 }
-
 
 
 fn doit() -> std::io::Result<()> {
