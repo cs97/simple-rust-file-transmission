@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [profile.release]
 opt-level = "z"  # Optimize for size, but also turn off loop vectorization.
-lto = true
-strip = true
+#lto = true
+#strip = true
 
 [dependencies]
-asytcp = { git = "https://github.com/cs97/rust-easytcp", features = ["tcp_openssl"] }
+easytcp = { git = "https://github.com/cs97/rust-easytcp", features = ["tcp_openssl"] }
