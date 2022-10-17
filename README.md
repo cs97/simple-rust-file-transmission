@@ -7,6 +7,9 @@
 * cp target/release/rft /usr/bin/rft
 
 ### Usage
-* ./rft
-* rft
+```
+./rft
+```
+```
+rft
 ```
