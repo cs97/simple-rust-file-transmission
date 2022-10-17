@@ -2,39 +2,8 @@
 use std::io::{self, Write};
 use std::io::BufReader;
 use std::io::prelude::*;
-//use std::net::{TcpListener, TcpStream};
-//use std::convert::TryInto;
 use std::fs::File;
-//use std::io::Read;
 use std::env;
-
-/*
-fn read_file(file_name: &str) -> std::io::Result<Vec<u8>> {
-    let mut file = File::open(file_name)?;
-    let mut data = Vec::new();
-    file.read_to_end(&mut data)?;
-    return Ok(data);
-}
-
-fn write_file(file_name: &str, data : Vec::<u8>) -> std::io::Result<()> {
-    let mut file = File::create(file_name).expect("Unable to create file");   
-    file.write_all(&data)?;
-    return Ok(());
-}
-
-fn recive_file(file_name: &str) -> std::io::Result<()> {
-	let tcp = easytcp::tcp::simple_listen("0.0.0.0", "6666")?;
-  write_file(file_name, tcp.recive()?)?;
-  return Ok(());
-}
-
-fn send_file(ip: &str, file_name: &str) -> std::io::Result<()> {
-	let tcp = easytcp::tcp::simple_connect(ip, "6666")?;
-	let data = read_file(file_name)?;
-	tcp.send(data)?;
-	return Ok(())
-}
-*/
 
 fn recive_file_in_chunks(file_name: &str) -> std::io::Result<()> {
 	let tcp = easytcp::tcp::listen("0.0.0.0", "6666")?;
