@@ -105,7 +105,7 @@ fn print_usage(prog_name: &str) -> () {
 
 fn doit() -> std::io::Result<()> {
 	let args: Vec<String> = env::args().collect();
-	if args.len() < 2 {
+	if args.len() < 1 {
 		print_usage(&args[0]);
 		return Ok(());
 	}
