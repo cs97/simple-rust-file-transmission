@@ -15,6 +15,7 @@ fn get_tcp_listen() -> std::io::Result<easytcp::tcp_aes_cbc::SecureTcp> {
 	return Ok(tcp)
 }
 
+
 fn get_tcp_connect(ip: &str) -> std::io::Result<easytcp::tcp_aes_cbc::SecureTcp> {
 	//let tcp = easytcp::tcp::connect(ip, "6666")?;
 
@@ -96,6 +97,7 @@ fn progressbar(value: usize, target_value: usize) -> () {
 	handle.flush().unwrap();
 }
 
+
 fn print_usage(prog_name: &str) -> () {
 	println!("usage:");
 	println!("\t{} {}", prog_name, "-r <filename>");
@@ -118,6 +120,7 @@ fn doit() -> std::io::Result<()> {
 	}?;
 	return Ok(());
 }
+
 
 fn main() -> std::io::Result<()> {
 	doit()?;
