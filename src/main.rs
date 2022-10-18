@@ -80,7 +80,7 @@ fn send_file_in_chunks(ip: &str, file_name: &str) -> std::io::Result<()> {
 fn progressbar(value: usize, target_value: usize) -> () {
 	let mut percent = (value * 100) / target_value;
 	if percent >= 100 {
-    	percent = 100;
+		percent = 100;
 	};
 	let n = (4 * percent) / 10 ;
 
